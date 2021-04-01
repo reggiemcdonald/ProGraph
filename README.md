@@ -2,72 +2,22 @@
 
 ### Syntax
 ```
-DEFINITION ::= {definitions: [GRAPH]}
+DEFINITION ::= GRAPH
 
-GRAPH ::= GRAPH_DECLARATIVE | GRAPH_IMPERATIVE
+GRAPH ::= { ( EDGES, )? ( DIRECTED, )? ( SUBGRAPHS, )? NAME, NODES }
 
-GRAPH_DECLARATIVE ::= {name: NAME, directed: BOOL, edges: [EDGE]}
+NAME ::= "name": STRING
 
-GRAPH_IMPERATIVE ::= {name: NAME, directed: BOOL, properties: [PROPERTY]}
+NODES ::= "nodes": [STRING]
 
-NODE ::= {name: NAME}
+EDGES ::= "edges": [EDGE]
 
-NAME ::= STRING
+EDGE ::= { "from": STRING, "to": STRING }
 
-EDGE ::= {to: NODE, from: NODE}
+DIRECTED ::= "directed": true | "directed": false
 
-PROPERTY ::= ?
+SUBGRAPHS ::= "subgraphs": [GRAPH]
 
-STRING ::= ^[a-zA-Z]+[0-9]*
-
-BOOL ::= true | false
+STRING ::= "[a-zA-Z0-9]+"
 ```
-### Syntax 2
-```
-DEFINITION ::= {definitions: { VAR: GRAPH_OBJ, ... }}
-
-GRAPH_OBJ ::= GRAPH | NODE
-
-GRAPH ::= GRAPH_DECLARITIVE | GRAPH_IMPERATIVE
-
-GRAPH_IMPERATIVE ::= {head: NODE, directed: BOOL, edges: [EDGE]}
-
-GRAPH_DECLARATIVE ::= {properties: [PROPERTY]}
-
-NODE ::= {name: NAME}
-
-NAME ::= STRING
-
-VAR ::= STRING
-
-EDGE ::= {to: NODE, from: NODE}
-
-PROPERTY ::= ?
-
-STRING ::= ^[a-zA-Z]+[0-9]*
-
-BOOL ::= true | false
-```
-
-### Syntax 3
-```
-DEFINITION ::= {definitions: [GRAPH]}
-
-GRAPH ::= GRAPH_DECLARATIVE | GRAPH_IMPERATIVE
-
-GRAPH_IMPERATIVE ::= {name: NAME, head : NODE}
-
-GRAPH_DECLARATIVE ::= {name: NAME, properties: [PROPERTIES]}
-
-NODE ::= {name: NAME, edges: [EDGE]}
-
-NAME ::= STRING
-
-EDGE ::= {to: NODE, from: NODE}
-
-PROPERTY ::= ?
-
-STRING ::= ^[a-zA-Z]+[0-9]*
-
-BOOL ::= true | false
-```
+EBNF syntax style adopted from https://cswr.github.io/JsonSchema/spec/grammar/
