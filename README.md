@@ -10,9 +10,11 @@ GRAPH_DECLARATIVE ::= {name: NAME, directed: BOOL, edges: [EDGE]}
 
 GRAPH_IMPERATIVE ::= {name: NAME, directed: BOOL, properties: [PROPERTY]}
 
+NODE ::= {name: NAME}
+
 NAME ::= STRING
 
-EDGE ::= {to: NAME, from: NAME}
+EDGE ::= {to: NODE, from: NODE}
 
 PROPERTY ::= ?
 
