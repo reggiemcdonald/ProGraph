@@ -24,7 +24,9 @@ BOOL ::= true | false
 ```
 ### Syntax 2
 ```
-DEFINITION ::= {definitions: { VAR: GRAPH, ... }}
+DEFINITION ::= {definitions: { VAR: GRAPH_OBJ, ... }}
+
+GRAPH_OBJ ::= GRAPH | NODE
 
 GRAPH ::= GRAPH_DECLARITIVE | GRAPH_IMPERATIVE
 
