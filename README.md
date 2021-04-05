@@ -43,3 +43,6 @@ EBNF syntax style adopted from https://cswr.github.io/JsonSchema/spec/grammar/
     ]
 }
 ```
+
+### Notes
+- `NAME` must be globally unique
