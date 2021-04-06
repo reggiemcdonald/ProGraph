@@ -1,24 +1,59 @@
 % This file contains out internal representation for graphs.
 % our approach uses a graph-term from.
 % Design initially borrowed from prologsite.
-% @see: https://sites.google.com/site/prologsite/prolog-problems/6
-% @note: Node > Vertex
 
-% A graph is defined by graph(I,L1,L2):
-% - I is the ID
-% - L1 is the list of nodes in the graph: ie [a,b,c]
-% - l2 is a list of edges in the graph: ie [e(a,b), e(b,a)]
-% The example graph is [a]<->[b] [c]
-graph(ex1, [a,b,c], [e(a,b), e(b,a)]).
+% A GRAPH is defined by graph(NAME,[NODE],[EDGE],[GRAPH]) where:
+% - NAME is a globally unique string.
+% - NODE is defined by node(NAME, [EDGE]) where:
+%   - NAME is a unique string to the graph.
+% - EDGE is is defined by dEdge(FROM,TO) where:
+%   - FROM/TO is the NAME of a NODE.
 
 % Graph validity constraints
-% - There must no be no edges to a node not found in L1
+% - There must no be no edges to a node not found in [NODE].
+% - There must not be any duplicate edges in [EDGES].
+% - NAME in graph must be globally unique.
 
-% A graph can have a subgraph. Suppose ex1 is a subgraph of ex1
-% You add a subgraph by adding it as a node and
-% you connect the edges of the graph and subgraph.
+% The example graph is [a]<->[b] [c]
+graph(ex1,
+    [
+        node(a,[dEdge(a,b)]),
+        node(b,[dEdge(b,a)]),
+        node(c,[])
+    ],
+    [
+        eEdge(a,b),
+        dEdge(b,a)
+    ], []).
+
+% A graph can have a subgraph. Suppose ex1 is a subgraph of ex2
 % This graph contains is [y]->[z]->[a]<->[b] [c]
-graph(ex2, [y,z,ex1], [e(y,z), e(z,a)]).
+graph(ex2,
+    [
+        node(y,[dEdge(y,z)]),
+        node(z,[dEdge(z,a)]),
+        node(a,[dEdge(a,b)]),
+        node(b,[dEdge(b,a)]),
+        node(c,[])
+    ],
+    [
+        dEdge(y,z),
+        dEdge(z,a),
+        eEdge(a,b),
+        dEdge(b,a)
+    ],
+    [
+        graph(ex1,
+            [
+                node(a,[dEdge(a,b)]),
+                node(b,[dEdge(b,a)]),
+                node(c,[])
+            ],
+            [
+                eEdge(a,b),
+                dEdge(b,a)
+            ],[])
+    ]).
 
 % Graphs can have properties that are calculated by the following predicates:
 
@@ -33,3 +68,6 @@ graph(ex2, [y,z,ex1], [e(y,z), e(z,a)]).
 
 % Central Point: If the radius is equal to the ecentricity.
 % cp(I) :- e(I),rad(I).
+
+% TODO:
+%https://en.wikipedia.org/wiki/Graph_property
