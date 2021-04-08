@@ -5,7 +5,7 @@
     "subgraphs": [
         {
             "name": "subgraph1",
-            "nodes": ["A","B"],
+            "nodes": ["A","B","E"],
             "edges": [
                 {"from": "A", "to": "B"},
                 {"from": "B", "to": "A"}
