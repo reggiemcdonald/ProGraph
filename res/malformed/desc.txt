@@ -1,0 +1,2 @@
+Malformed 1: Node in subgraph not present in parent graph
+Malformed 2: Undefined node referenced in subgraph edge
