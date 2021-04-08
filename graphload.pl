@@ -16,9 +16,11 @@
 
 % buildGraphFromFile is true when the graph dsl at FilePath is successfully parsed.
 buildGraphFromFile(FilePath, Graph) :- 
+    retractall(graph(_,_,_,_)),
     loadDefinition(FilePath, JsonStructure),
     generateTopLevel(JsonStructure, Graph),
-    staticCheck(Graph).
+    staticCheck(Graph),
+    assertAllGraphs(Graph).
 
 % loadDefinition is true if the JSON file specified at the file path can be read and parsed into a json structure.
 loadDefinition(FilePath, JsonStructure) :- 
@@ -139,7 +141,19 @@ checkEdgesForUndeclaredNode(AllowedNodes, [dEdge(From,To)|T]) :-
     findNode(To, AllowedNodes,_),
     checkEdgesForUndeclaredNode(AllowedNodes, T).
 
+/* Miscellaneous Utilities */
 
+% assertAllGraphs is true when the toplevel and subgraphs have been asserted in the knowledge base.
+assertAllGraphs(graph(Name, Nodes, Edges, Subgraphs)) :-
+    assertz(graph(Name, Nodes, Edges, Subgraphs)),
+    assertSubgraphs(Subgraphs).
+
+% assertSubgraphs is true when the subgraphs produced have been added to the knowledge base
+assertSubgraphs([]).
+assertSubgraphs([graph(Name, Nodes, Edges, Subgraphs)|Rest]) :-
+    assertz(graph(Name,Nodes,Edges,Subgraphs)),
+    assertSubgraphs(Subgraphs),
+    assertSubgraphs(Rest).
 
 
 
