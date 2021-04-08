@@ -1,3 +1,4 @@
+% learned about plunit from https://stackoverflow.com/questions/57263196/unit-tests-in-swi-prolog-visibility-of-user-predicates-from-within-a-module
 :- begin_tests(graphload).
 :- include(graphload).
 :- dynamic same/1.
@@ -31,6 +32,7 @@ validateSolution(FilePath, Graph) :-
     same(Graph),
     unload_file(SolFile).
 
+% learned how to use forall here https://stackoverflow.com/questions/54334567/swi-prolog-unit-testing-library-plunit-how-is-forall-option-used
 test(malformed, [forall(malformed_generator(FilePath))]) :-
     not(buildGraphFromFile(FilePath,_)).
 
