@@ -15,3 +15,5 @@ order(Name, Order) :-
 size(Name, Size) :-
     graph(Name, _, Edges, _),
     length(Edges, Size).
+
+% Kosaraju's algorithm adapted from https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm
