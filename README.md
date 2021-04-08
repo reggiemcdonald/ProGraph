@@ -14,8 +14,6 @@ EDGES ::= "edges": [EDGE]
 
 EDGE ::= { "from": STRING, "to": STRING }
 
-DIRECTED ::= "directed": true | "directed": false
-
 SUBGRAPHS ::= "subgraphs": [GRAPH]
 
 STRING ::= "[a-zA-Z0-9]+"
@@ -29,7 +27,6 @@ EBNF syntax style adopted from https://cswr.github.io/JsonSchema/spec/grammar/
     "name": "toplevel",
     "nodes": ["A","B","C","D"],
     "edges": [],
-    "directed": true,
     "subgraphs": [
         {
             "name": "subgraph1",
