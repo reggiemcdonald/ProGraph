@@ -2,8 +2,6 @@
 % our approach uses a graph-term from.
 % Design initially borrowed from prologsite.
 
-% :- dynamc graph/3.
-
 % A GRAPH is defined by graph(NAME,[NODE],[EDGE],[GRAPH]) where:
 % - NAME is a globally unique string.
 % - NODE is defined by node(NAME, [EDGE]) where:
