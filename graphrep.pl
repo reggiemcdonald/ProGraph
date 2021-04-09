@@ -39,7 +39,7 @@ graph(ex2,
     [
         dEdge(y,z),
         dEdge(z,a),
-        eEdge(a,b),
+        dEdge(a,b),
         dEdge(b,a)
     ],
     [
@@ -57,8 +57,51 @@ graph(ex2,
 
 % Graphs can have properties that are calculated by the following predicates:
 
+% Len(Id,N): the number of edges in a graph.
+% - Id is the graphID
+% - N is the number of edges
+len(Id, N) :- graph(Id, _, L2,_), len(L2, N).
+
+len([], N) :- N is 0.
+len([_|T], N) :-
+    len(T, N1),
+    N is N1+1.
+
+% dis(Id, N1, N2, N): the distance between From -> To.
+% - Id is the graphID
+% - From/To Node name
+% - N is the distance
+dis(Id, From, To, N) :-
+    graph(Id, Nodes,_, _),
+    findPath(From, To, Nodes, [], Path),
+    len(Path, N).
+
+% path(ID, From, To, Path): the path between From -> To.
+% - Id is the graphID
+% - From/To Node name
+% - Path is a list of Node names
+path(Id, From, To, Path) :-
+    graph(Id, Nodes, _, _),
+    findPath(From, To, Nodes, [], Path).
+
+findNode(Name, [node(Name,Edges)|_], node(Name,Edges)).
+findNode(Name, [node(Other,_)|Rest], N) :-
+    not(Name == Other),
+    findNode(Name, Rest, N).
+
+findPath(From, From, _, _, [From]).
+findPath(From, To, Nodes, Visited, [From|Path]) :-
+    \+ member(From, Visited),
+    findNode(From, Nodes, node(From, Edges)),
+    findPathForNode(Edges, To, Nodes, [From|Visited], Path).
+
+findPathForNode([dEdge(_,Next)|_], To, Nodes, Visited, Path) :-
+    findPath(Next, To, Nodes, Visited, Path).
+findPathForNode([dEdge(_,_)|Rest], To, Nodes, Visited, Path) :-
+    findPathForNode(Rest, To, Nodes, Visited, Path).
+
 % Eccentricity: the max distance from a node to all other node.
-% e(I) :-
+% e(I) :- 
 
 % Radius: The min eccentricity from all the edges of the Graph.
 % rad(I) :-
@@ -68,6 +111,3 @@ graph(ex2,
 
 % Central Point: If the radius is equal to the ecentricity.
 % cp(I) :- e(I),rad(I).
-
-% TODO:
-%https://en.wikipedia.org/wiki/Graph_property
