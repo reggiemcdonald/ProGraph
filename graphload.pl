@@ -2,18 +2,6 @@
 :- module(graphload).
 :- use_module(library(http/json)).
 
-/*
-
-                                    subgraph
-    graph(NAME, [NODE], [EDGE], [GRAPH])
-
-    node(NAME, [EDGE])
-
-    // A directed edge
-    dEdge(FROM, TO)
-
-*/
-
 % buildGraphFromFile is true when the graph dsl at FilePath is successfully parsed.
 buildGraphFromFile(FilePath, Graph) :- 
     retractall(graph(_,_,_,_)),
@@ -39,11 +27,9 @@ generateSubgraphs([],_,[]).
 generateSubgraphs(
     [json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]) | T], 
     AllNodes, 
-    [graph(Name, Nodes, Edges, SubgraphsOfSubgraphs) | RestOfSubgraphs]
+    [Graph | RestOfSubgraphs]
 ) :-
-    findNodes(NodesJson, AllNodes, Nodes),
-    generateEdges(EdgesJson, Edges),
-    generateSubgraphs(SubgraphsJson, AllNodes, SubgraphsOfSubgraphs),
+    generateTopLevel(json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]), Graph),
     generateSubgraphs(T, AllNodes, RestOfSubgraphs).
 
 % generateAllEdges is true when all edges in toplevel and the subgraphs have been parsed.
@@ -94,14 +80,6 @@ getAllEdgesFrom(From, [dEdge(F,_)|T], R) :-
 getAllEdgesFrom(From, [dEdge(From,To)|T], [dEdge(From, To)|R]) :-
     getAllEdgesFrom(From, T, R).
 
-% findNodes is true when all nodes referenced in list 1 are extracted from AllNodes.
-% This is so that a single copy of nodes is shared between parent and subgraphs,
-% since the graphs contain edges.
-findNodes([],_,[]).
-findNodes([H|T], AllNodes, [X|Y]) :-
-    findNode(H, AllNodes, X),
-    findNodes(T, AllNodes, Y).
-
 % findNode is true when a node of name Name is present in the list of nodes.
 findNode(Name, [node(Name,Edges)|_], node(Name,Edges)).
 findNode(Name, [node(N,_)|T], R) :-
@@ -129,8 +107,8 @@ staticCheckSubgraphs(AllNodes, [graph(_, Nodes, Edges, Subgraphs)|T]) :-
 % That is to say, no new nodes have been defined in a subgraph.
 % Any node in a subgraph must be present in a parent graph.
 checkNodeScoping(_, []).
-checkNodeScoping(AllowedNodes, [H|T]) :-
-    member(H,AllowedNodes),
+checkNodeScoping(AllowedNodes, [node(Name,_)|T]) :-
+    findNode(Name, AllowedNodes, _),
     checkNodeScoping(AllowedNodes, T).
 
 % checkEdgesForUndeclaredNode is true when all edges of the graph
