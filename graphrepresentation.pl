@@ -1,6 +1,9 @@
 % This file contains out internal representation for graphs.
 % our approach uses a graph-term from.
-% Design initially borrowed from prologsite.
+
+:- module(graphrepresentation).
+:- include(graphload).
+:- dynamic graph/4.
 
 % A GRAPH is defined by graph(NAME,[NODE],[EDGE],[GRAPH]) where:
 % - NAME is a globally unique string.
@@ -22,7 +25,7 @@ graph(ex1,
         node(c,[])
     ],
     [
-        eEdge(a,b),
+        dEdge(a,b),
         dEdge(b,a)
     ], []).
 
@@ -50,7 +53,7 @@ graph(ex2,
                 node(c,[])
             ],
             [
-                eEdge(a,b),
+                dEdge(a,b),
                 dEdge(b,a)
             ],[])
     ]).
@@ -60,26 +63,25 @@ graph(ex2,
 % Len(Id,N): the number of edges in a graph.
 % - Id is the graphID
 % - N is the number of edges
-len(Id, N) :- graph(Id, _, L2,_), len(L2, N).
-
-len([], N) :- N is 0.
-len([_|T], N) :-
-    len(T, N1),
-    N is N1+1.
+len(Id, N) :- graph(Id, _, L2,_), length(L2, N).
 
 % dis(Id, N1, N2, N): the distance between From -> To.
 % - Id is the graphID
 % - From/To Node name
 % - N is the distance
-dis(Id, From, To, N) :-
+distance(Id, From, To, N) :-
     graph(Id, Nodes,_, _),
     findPath(From, To, Nodes, [], Path),
-    len(Path, N).
+    length(Path, N).
 
 % path(ID, From, To, Path): the path between From -> To.
 % - Id is the graphID
 % - From/To Node name
 % - Path is a list of Node names
+path(Id, From, To, Path) :-
+    graph(Id, Nodes, _, _),
+    findPath(From, To, Nodes, [], Path).
+
 path(Id, From, To, Path) :-
     graph(Id, Nodes, _, _),
     findPath(From, To, Nodes, [], Path).
@@ -100,8 +102,38 @@ findPathForNode([dEdge(_,Next)|_], To, Nodes, Visited, Path) :-
 findPathForNode([dEdge(_,_)|Rest], To, Nodes, Visited, Path) :-
     findPathForNode(Rest, To, Nodes, Visited, Path).
 
-% Eccentricity: the max distance from a node to all other node.
-% e(I) :- 
+% eccentricity(Id, Dis): the max Distance from a node to all other node.
+eccentricity(Id, Dis) :-
+    graph(Id, Nodes, _, _),
+    findLongestDistanceInGraph(Id, Nodes, Nodes, 0, Dis).
+
+findLongestDistanceInGraph(_, [], _, Max, Max).
+findLongestDistanceInGraph(Id, [node(From,_)|Res], Original, Max, Ref) :-
+    ( findLongestDistance(Id, From, Original, Max, N)
+    ->  findLongestDistanceInGraph_(Id, Res, Original, N, Max, Ref)
+    ;   findLongestDistanceInGraph_(Id, Res, Original, 0, Max, Ref)
+    ).
+findLongestDistanceInGraph_(Id, Res, Original, N, Max, Ref) :-
+    ( N > Max
+        ->  findLongestDistanceInGraph(Id, Res, Original, N, Ref)
+        ;   findLongestDistanceInGraph(Id, Res, Original, Max, Ref)
+    ).
+
+findLongestDistance(_,_,[],Ref, Ref).
+
+findLongestDistance(Id,From,[node(To,_)|Res], Max, Ref) :-
+    ( distance(Id, From, To, N)
+    ->  findLongestDistance_(Id, From, Res, N, Max, Ref)
+    ;   findLongestDistance_(Id, From, Res, 0, Max, Ref)
+    ).
+
+findLongestDistance_(Id, From, Res, N, Max, Ref) :-
+    ( N > Max 
+        -> findLongestDistance(Id, From, Res, N, Ref)
+        ;  findLongestDistance(Id, From, Res, Max, Ref)
+    ).
+
+
 
 % Radius: The min eccentricity from all the edges of the Graph.
 % rad(I) :-

@@ -1,0 +1,21 @@
+{
+    "name": "toplevel",
+    "nodes": ["A","B","C","Y","Z"],
+    "edges": [
+        {"from": "Y", "to": "Z"},
+        {"from": "Z", "to": "A"},
+        {"from": "A", "to": "B"},
+        {"from": "B", "to": "A"}
+    ],
+    "subgraphs": [
+        {
+            "name": "subgraph1",
+            "nodes": ["A","B","C"],
+            "edges": [
+                {"from": "A", "to": "B"},
+                {"from": "B", "to": "A"}
+            ],
+            "subgraphs": []
+        }
+    ]
+}
