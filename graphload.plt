@@ -38,6 +38,6 @@ test(malformed, [forall(malformed_generator(FilePath))]) :-
 
 test(wellformed, [forall(well_formed_generator(FilePath))]) :-
     buildGraphFromFile(FilePath, Graph),
-    validateSolution(FilePath, Graph).
+    validateSolution(FilePath, Graph),!.
 
 :- end_tests(graphload).
