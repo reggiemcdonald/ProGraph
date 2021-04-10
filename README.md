@@ -48,6 +48,10 @@ EBNF syntax style adopted from https://cswr.github.io/JsonSchema/spec/grammar/
 - To run using local swipl: `make run MOD=$MODULE` where `$MODULE` is the name of the module you want to run.
 - To run using dockerized swipl: `make docker-run MOD=$MODULE` where `$MODULE` is the name of the module you want to test.
 
+### Graph Visualization Requirements
+- Install GraphViz: https://graphviz.org/download/
+- Install Prolog gv library: ```swipl -g 'pack_install(prolog_graphviz)' -t halt```
+
 ### Testing
 - To test using local swipl: `make test MOD=$MODULE` where `$MODULE` is the name of the module you want to test.
 - To test using dockerized swipl: `make docker-test MOD=$MODULE` where `$MODULE` is the name of the module you want to test.
