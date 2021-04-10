@@ -6,7 +6,7 @@
 buildGraphFromFile(FilePath, Graph) :- 
     retractall(graph(_,_,_,_)),
     loadDefinition(FilePath, JsonStructure),
-    generateTopLevel(JsonStructure, Graph),
+    generateGraph(JsonStructure, Graph),
     staticCheck(Graph),
     assertAllGraphs(Graph).
 
@@ -16,8 +16,8 @@ loadDefinition(FilePath, JsonStructure) :-
     json_read(Stream, JsonStructure),
     close(Stream).
 
-% generateTopLevel is true when the top level graph is successfully parsed.
-generateTopLevel(json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]), graph(Name, AllNodes, AllEdges, Subgraphs)) :-
+% generateGraph is true when the top level graph is successfully parsed.
+generateGraph(json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]), graph(Name, AllNodes, AllEdges, Subgraphs)) :-
     generateAllEdges(EdgesJson, SubgraphsJson, AllEdges),
     generateNodes(NodesJson, AllEdges, AllNodes),
     generateSubgraphs(SubgraphsJson, AllNodes, Subgraphs).
@@ -29,7 +29,7 @@ generateSubgraphs(
     AllNodes, 
     [Graph | RestOfSubgraphs]
 ) :-
-    generateTopLevel(json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]), Graph),
+    generateGraph(json([name=Name, nodes=NodesJson, edges=EdgesJson, subgraphs=SubgraphsJson]), Graph),
     generateSubgraphs(T, AllNodes, RestOfSubgraphs).
 
 % generateAllEdges is true when all edges in toplevel and the subgraphs have been parsed.
