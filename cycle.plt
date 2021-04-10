@@ -12,5 +12,5 @@ loadTestGraph(Graph) :-
     write('% PL-Unit: test graph loaded.\n').
 
 
-test(cycle1) :-
+test(cycleTopLevel) :-
              cycle(toplevel).
