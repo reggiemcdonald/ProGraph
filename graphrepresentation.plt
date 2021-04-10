@@ -33,8 +33,4 @@ test(ecc1, [true(Ecc =:= 4)]) :-
 % test(size3) :-
 %     not(size(subgraph2, _)).
 
-same([H1|R1], [H2|R2]):-
-    H1 = H2,
-    same(R1, R2).
-
 :- end_tests(graphrepresentation).
