@@ -27,5 +27,8 @@ test(size2, [true(Size =:= 2)]) :-
 test(size3) :-
     not(size(subgraph2, _)).
 
+test(kosarajus) :-
+    kosarajus(toplevel, [['D'], ['C'], ['A', 'B']]).
+
 :- end_tests(integerInvariants).
     

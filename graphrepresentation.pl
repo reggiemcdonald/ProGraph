@@ -70,37 +70,37 @@ len(Id, N) :- graph(Id, _, L2,_), length(L2, N).
 % - From/To Node name
 % - N is the distance
 distance(Id, From, To, N) :-
-    path(Id, From, To, Path),
+    graph(Id, Nodes,_, _),
+    findPath(From, To, Nodes, [], Path),
     length(Path, N).
 
 % path(ID, From, To, Path): the path between From -> To.
 % - Id is the graphID
 % - From/To Node name
 % - Path is a list of Node names
-path(_, From, From, [From]).
-path(Id, From, To, Path1) :-
-    graph(Id, _,Edges, _),
-    findPath(From, To, Edges, [], Path),
-    reverse([To|Path], Path1).
+path(Id, From, To, Path) :-
+    graph(Id, Nodes, _, _),
+    findPath(From, To, Nodes, [], Path).
 
-findPath(From,From,_,[From],[From]).
-findPath(From,To,Edges,Visited,Path) :-
-    \+ member(From,Visited),
-    relevantEdges(From, Edges,[], Relevant),
-    findPath_(To,Relevant,Edges,[From|Visited],Path).
+path(Id, From, To, Path) :-
+    graph(Id, Nodes, _, _),
+    findPath(From, To, Nodes, [], Path).
 
-findPath_(To,[To|_],_,Visited,Visited).
-findPath_(To,[Next|Rest],Edges,Visited,Path) :-
-    not(findPath(Next,To,Edges,Visited,Path)),
-    findPath_(To,Rest,Edges,Visited,Path).
-findPath_(To,[Next],Edges,Visited,Path) :-
-    findPath(Next,To,Edges,Visited,Path).
+findNode(Name, [node(Name,Edges)|_], node(Name,Edges)).
+findNode(Name, [node(Other,_)|Rest], N) :-
+    not(Name == Other),
+    findNode(Name, Rest, N).
 
-relevantEdges(_,[],Relevant,Relevant).
-relevantEdges(From,[dEdge(From,To)|Rest],Relevant,Path) :-
-    relevantEdges(From,Rest,[To|Relevant],Path).
-relevantEdges(From,[_|Rest],Relevant,Path) :-
-    relevantEdges(From,Rest,Relevant,Path).
+findPath(From, From, _, _, [From]).
+findPath(From, To, Nodes, Visited, [From|Path]) :-
+    \+ member(From, Visited),
+    findNode(From, Nodes, node(From, Edges)),
+    findPathForNode(Edges, To, Nodes, [From|Visited], Path).
+
+findPathForNode([dEdge(_,Next)|_], To, Nodes, Visited, Path) :-
+    findPath(Next, To, Nodes, Visited, Path).
+findPathForNode([dEdge(_,_)|Rest], To, Nodes, Visited, Path) :-
+    findPathForNode(Rest, To, Nodes, Visited, Path).
 
 % eccentricity(Id, Dis): the max Distance from a node to all other node.
 eccentricity(Id, Dis) :-
