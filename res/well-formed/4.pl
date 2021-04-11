@@ -8,11 +8,11 @@ same(Parsed) :-
                              node('E', [])
                          ],
                          [
+                             dEdge('D', 'E'),
                              dEdge('A', 'D'),
                              dEdge('A', 'B'),
                              dEdge('B', 'C'),
-                             dEdge('C', 'A'),
-                             dEdge('D', 'E')
+                             dEdge('C', 'A')
                          ],
                          [
                              graph(noCycle,
@@ -26,7 +26,7 @@ same(Parsed) :-
                                    []),
                              graph(cycle1,
                                    [
-                                       node('A', [dEdge('A', 'D'), dEdge('A', 'B')]),
+                                       node('A', [dEdge('A', 'B')]),
                                        node('B', [dEdge('B', 'C')]),
                                        node('C', [dEdge('C', 'A')])
                                    ],
@@ -36,4 +36,6 @@ same(Parsed) :-
                                        dEdge('C', 'A')
                                    ],
                                   [])
-                         ]))
+                         ])).
+
+isSame(A,A).

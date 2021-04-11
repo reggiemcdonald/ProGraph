@@ -12,8 +12,8 @@
         {
             "name": "cycle1",
             "nodes": ["A", "B", "C"],
-            "edges": [{"from": "A", "to": "B"}
-                      {"from": "B", "to": "C"}
+            "edges": [{"from": "A", "to": "B"},
+                      {"from": "B", "to": "C"},
                       {"from": "C", "to": "A"}],
             "subgraphs": []
         }
