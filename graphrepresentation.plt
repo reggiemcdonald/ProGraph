@@ -18,6 +18,9 @@ test(distance2, [true(Distance =:= 2)]) :-
 test(path1, [true(Path == ['Y','Z','A','B'])]) :-
     path(toplevel, 'Y','B',Path).
 
+test(path2, [true(Path == ['A','B'])]) :-
+    path(toplevel, 'A','B',Path).
+
 test(ecc1, [true(Ecc =:= 4)]) :-
     eccentricity(toplevel, Ecc).
 
