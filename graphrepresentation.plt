@@ -9,25 +9,19 @@ loadTestGraph(Graph) :-
     buildGraphFromFile(FilePath, Graph),
     write('% PL-Unit: test graph loaded.\n').
 
-test(distance1, [true(Distance =:= 5)]) :-
-    distance(toplevel,"Y","B",Distance).
+test(distance1, [true(Distance =:= 4)]) :-
+    distance(toplevel,'Y','B',Distance).
 
-test(distance2, [true(Distance =:= 1)]) :-
-    distance(toplevel,"A","B",Distance).
+test(distance2, [true(Distance =:= 2)]) :-
+    distance(toplevel,'A','B',Distance).
 
-test(path1, [true(Path =:= ["Y","Z","A","B"])]) :-
-    path(toplevel1, "Y","B",Path).
+test(path1, [true(Path == ['Y','Z','A','B'])]) :-
+    path(toplevel, 'Y','B',Path).
 
-% test(order3) :-
-%     not(order(subgraph2, _)).
+test(path2, [true(Path == ['A','B'])]) :-
+    path(toplevel, 'A','B',Path).
 
-% test(size1, [true(Size =:= 2)]) :-
-%     size(toplevel, Size).
-
-% test(size2, [true(Size =:= 2)]) :-
-%     size(subgraph1, Size).
-
-% test(size3) :-
-%     not(size(subgraph2, _)).
+test(ecc1, [true(Ecc =:= 4)]) :-
+    eccentricity(toplevel, Ecc).
 
 :- end_tests(graphrepresentation).

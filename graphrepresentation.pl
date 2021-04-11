@@ -70,30 +70,28 @@ len(Id, N) :- graph(Id, _, L2,_), length(L2, N).
 % - From/To Node name
 % - N is the distance
 distance(Id, From, To, N) :-
-    graph(Id, Nodes,_, _),
-    findPath(From, To, Nodes, [], Path),
+    path(Id, From, To, Path),
     length(Path, N).
 
 % path(ID, From, To, Path): the path between From -> To.
 % - Id is the graphID
 % - From/To Node name
 % - Path is a list of Node names
-path(Id, From, To, Path) :-
-    graph(Id,_, Edges, _),
-    findPath(From, To, Edges, [], Path1),
-    reverse([To|Path1],Path).
+path(_, From, From, [From]).
+path(Id, From, To, Path1) :-
+    graph(Id, _,Edges, _),
+    findPath(From, To, Edges, [], Path),
+    reverse([To|Path], Path1).
 
 findPath(From,From,_,[From],[From]).
 findPath(From,To,Edges,Visited,Path) :-
     \+ member(From,Visited),
     relevantEdges(From, Edges,[], Relevant),
-    write(Relevant),nl,
     findPath_(To,Relevant,Edges,[From|Visited],Path).
 
 findPath_(To,[To|_],_,Visited,Visited).
 findPath_(To,[Next|Rest],Edges,Visited,Path) :-
     not(findPath(Next,To,Edges,Visited,Path)),
-    write(To),write("|"),write(Next),write("|"),write(Visited),nl,
     findPath_(To,Rest,Edges,Visited,Path).
 findPath_(To,[Next],Edges,Visited,Path) :-
     findPath(Next,To,Edges,Visited,Path).
@@ -134,14 +132,3 @@ findLongestDistance_(Id, From, Res, N, Max, Ref) :-
         -> findLongestDistance(Id, From, Res, N, Ref)
         ;  findLongestDistance(Id, From, Res, Max, Ref)
     ).
-
-
-
-% Radius: The min eccentricity from all the edges of the Graph.
-% rad(I) :-
-
-% Diameter: the max eccentricity from all the edges of a Graph.
-% diam(I) :-
-
-% Central Point: If the radius is equal to the ecentricity.
-% cp(I) :- e(I),rad(I).
