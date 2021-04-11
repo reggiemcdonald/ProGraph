@@ -1,0 +1,21 @@
+{
+    "name": "toplevel",
+    "nodes": ["A", "B", "C", "D", "E"],
+    "edges": [{"from": "A", "to": "D"}],
+    "subgraphs": [
+        {
+            "name": "noCycle",
+            "nodes": ["D", "E"],
+            "edges": [{"from": "D", "to": "E"}],
+            "subgraphs": []
+        },
+        {
+            "name": "cycle1",
+            "nodes": ["A", "B", "C"],
+            "edges": [{"from": "A", "to": "B"}
+                      {"from": "B", "to": "C"}
+                      {"from": "C", "to": "A"}],
+            "subgraphs": []
+        }
+    ]
+}

@@ -18,6 +18,7 @@
 % - NAME in graph must be globally unique.
 
 % The example graph is [a]<->[b] [c]
+
 % graph(ex1,
 %     [
 %         node(a,[dEdge(a,b)]),
@@ -77,6 +78,7 @@ distance(Id, From, To, N) :-
 % - Id is the graphID
 % - From/To Node name
 % - Path is a list of Node names
+
 path(_, From, From, [From]).
 path(Id, From, To, Path1) :-
     graph(Id, _,Edges, _),
