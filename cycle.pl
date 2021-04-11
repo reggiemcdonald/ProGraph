@@ -9,14 +9,10 @@
 :- use_module(graphutil).
 
 cycle(Name) :-
-    graph(Name, [F|R], _, _),
-    hasCycle(F, [F|R], []).
+    graph(Name, _, Edges, _),
+    hasCycle(Edges, []).
 
-hasCycle(node(Name, _), _, Visited) :-
-    member(Name, Visited),
-    !.
-hasCycle(node(Name, [dEdge(_, To)|Rest]), Nodes, Visited) :-
-    findNode(To, Nodes, node(To, Edges)),
-    hasCycle(node(To, Edges), Nodes, [Name|Visited]);
-    hasCycle(node(Name, Rest), Nodes, Visited).
-
+hasCycle([dEdge(_,T)|_], Visited) :-
+    member(T, Visited).
+hasCycle([dEdge(F,_)|R], Visited) :-
+    hasCycle(R, [F|Visited]).
