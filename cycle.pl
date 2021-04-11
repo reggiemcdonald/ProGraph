@@ -4,7 +4,9 @@
 %
 %Checking if a graph has a cycle
 
-:- module(cycle).
+:- module(cycle, [cycle/1]).
+:- use_module(graphrepresentation).
+:- use_module(graphutil).
 
 cycle(Name) :-
     graph(Name, [F|R], _, _),
@@ -18,7 +20,3 @@ hasCycle(node(Name, [dEdge(_, To)|Rest]), Nodes, Visited) :-
     hasCycle(node(To, Edges), Nodes, [Name|Visited]);
     hasCycle(node(Name, Rest), Nodes, Visited).
 
-findNode(Name, [node(Name,Edges)|_], node(Name,Edges)).
-findNode(Name, [node(Other,_)|Rest], N) :-
-    not(Name == Other),
-    findNode(Name, Rest, N).

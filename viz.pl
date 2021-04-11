@@ -1,16 +1,9 @@
-% to view example: `swipl -s viz.pl -g view -t halt` in your shell
-% to export example: `swipl -s viz.pl -g export -t halt` in your shell
 
-
-
+:- module(viz, [view_graph/1, export_graph/1]).
 :- use_module(library(gv)).
 :- use_module(library(apply)).
 :- use_module(library(yall)).
-:- include(graphload).
-:- dynamic graph/4.
-
-example_(graph(example1, [node('A', [dEdge('A', 'B')]), node('B', [dEdge('B', 'A')])], [dEdge('A', 'B'), dEdge('B', 'A')], [])).
-
+:- use_module(graphrepresentation).
 
 view_graph(Name) :-
     graph(Name, Nodes, Edges, SubGraphs),
@@ -20,21 +13,12 @@ export_graph(Name) :-
     graph(Name, Nodes, Edges, SubGraphs),
     export(graph(Name, Nodes, Edges, SubGraphs)).
 
-export :-
-    example_(Graph),
-    export(Graph).
-
 export(Graph) :-
     gv_export(
-        'graph.svg',
+        'graph.png',
         {Graph}/[Out]>>export_graph_(Out, Graph),
         options{directed: true}
     ).
-
-
-view :-
-    example_(Graph),
-    view(Graph).
 
 view(Graph) :-
     gv_view(
@@ -42,10 +26,8 @@ view(Graph) :-
         options{directed: true}
     ).
 
-
-
 export_graph_(Out, Graph) :-
-    Graph = graph(Name, Nodes, Edges, SGs),
+    Graph = graph(_, Nodes, Edges, _),
     maplist(export_node(Out), Nodes),
     maplist(export_arc(Out), Edges).
 

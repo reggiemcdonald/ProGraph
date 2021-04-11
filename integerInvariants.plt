@@ -1,6 +1,8 @@
 % learned about plunit from https://stackoverflow.com/questions/57263196/unit-tests-in-swi-prolog-visibility-of-user-predicates-from-within-a-module
+
 :- begin_tests(integerInvariants, [setup(loadTestGraph(_))]).
-:- include(integerInvariants).
+:- use_module(integerInvariants).
+:- use_module(graphload).
 
 loadTestGraph(Graph) :-
     write('% PL-Unit: loading test graph...\n'),
@@ -28,7 +30,6 @@ test(size3) :-
     not(size(subgraph2, _)).
 
 test(kosarajus) :-
-    kosarajus(toplevel, [['D'], ['C'], ['A', 'B']]).
+    kosarajus(toplevel, [['D'], ['C'], ['A', 'B']]),!.
 
 :- end_tests(integerInvariants).
-    

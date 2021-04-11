@@ -1,9 +1,8 @@
 
-
 % learned about plunit from https://stackoverflow.com/questions/57263196/unit-tests-in-swi-prolog-visibility-of-user-predicates-from-within-a-module
 :- begin_tests(cycle, [setup(loadTestGraph(_))]).
-:- include(graphload).
-:- include(cycle).
+:- use_module(graphload).
+:- use_module(cycle).
 
 loadTestGraph(Graph) :-
     write('% PL-Unit: loading test graph...\n'),
@@ -14,10 +13,12 @@ loadTestGraph(Graph) :-
 
 
 test(subgraphWithNoCycle) :-
-    not(cycle(noCycle)).
+    not(cycle(noCycle)),!.
 
 test(subgraphWithCycle) :- 
-    cycle(cycle1).
+    cycle(cycle1),!.
 
 test(toplevelWithCycle) :-
-    cycle(toplevel).
+    cycle(toplevel),!.
+
+:- end_tests(cycle).

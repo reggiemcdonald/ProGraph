@@ -1,8 +1,8 @@
 % This module provides measurements on the graph
 
-:- module(integerInvariants).
-:- include(graphload).
-:- dynamic graph/4.
+:- module(integerInvariants, [order/2, size/2, kosarajus/2]).
+:- use_module(graphrepresentation).
+:- use_module(graphutil).
 
 % order is true when graph Name has Order vertices.
 % See 
