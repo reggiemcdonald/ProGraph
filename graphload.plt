@@ -1,6 +1,6 @@
 % learned about plunit from https://stackoverflow.com/questions/57263196/unit-tests-in-swi-prolog-visibility-of-user-predicates-from-within-a-module
 :- begin_tests(graphload).
-:- include(graphload).
+:- use_module(graphload).
 :- dynamic same/1.
 
 malformed_generator(FullFilePath) :-
