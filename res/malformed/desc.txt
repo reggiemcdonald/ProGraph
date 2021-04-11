@@ -1,2 +1,6 @@
 Malformed 1: Node in subgraph not present in parent graph
 Malformed 2: Undefined node referenced in subgraph edge
+Malformed 3: JSON structure does not conform to EBNF - missing subgraphs key
+Malformed 4: JSON structure does not conform to EBNF - missing nodes key
+Malformed 5: JSON structure does not conform to EBNF - missing edges key
+Malformed 6: Duplicate name

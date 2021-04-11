@@ -33,8 +33,8 @@ validateSolution(FilePath, Graph) :-
     unload_file(SolFile).
 
 % learned how to use forall here https://stackoverflow.com/questions/54334567/swi-prolog-unit-testing-library-plunit-how-is-forall-option-used
-test(malformed, [forall(malformed_generator(FilePath))]) :-
-    not(buildGraphFromFile(FilePath,_)).
+test(malformed, [forall(malformed_generator(FilePath)), error(_)]) :-
+    buildGraphFromFile(FilePath,_).
 
 test(wellformed, [forall(well_formed_generator(FilePath))]) :-
     buildGraphFromFile(FilePath, Graph),

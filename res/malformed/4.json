@@ -1,0 +1,5 @@
+{
+    "name": "toplevel",
+    "edges": [{"from": "A", "to": "B"}],
+    "subgraphs": []
+}
