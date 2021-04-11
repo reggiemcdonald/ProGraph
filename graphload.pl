@@ -82,7 +82,7 @@ staticCheck(graph(_, AllNodes, _, Subgraphs)) :-
 staticCheckSubgraphs(_,[]).
 staticCheckSubgraphs(AllNodes, [graph(_, Nodes, Edges, Subgraphs)|T]) :-
     checkNodeScoping(AllNodes, Nodes),
-    checkEdgesForUndeclaredNode(AllNodes, Edges),
+    checkEdgesForUndeclaredNode(Nodes, Edges),
     staticCheckSubgraphs(AllNodes, T),
     staticCheckSubgraphs(Nodes, Subgraphs).
 
