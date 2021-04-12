@@ -8,7 +8,7 @@
 buildGraphFromFile(FilePath, Graph) :- 
     retractall(graph(_,_,_,_)),
     loadDefinition(FilePath, JsonStructure),
-    generateGraph(JsonStructure, Graph),
+    (generateGraph(JsonStructure, Graph) ; syntax_error(JsonStructure)),
     staticCheck(Graph),
     assertAllGraphs(Graph).
 
@@ -75,16 +75,17 @@ appendNoDup(A, [H|T], [H|C]) :-
 */
 
 % staticCheck is true when the graph is properly formed.
-staticCheck(graph(_, AllNodes, _, Subgraphs)) :-
-    staticCheckSubgraphs(AllNodes, Subgraphs).
+staticCheck(graph(Name, AllNodes, _, Subgraphs)) :-
+    staticCheckSubgraphs([Name], AllNodes, Subgraphs).
 
 % staticCheckSubgraphs is true when all subgraphs are properly formed.
-staticCheckSubgraphs(_,[]).
-staticCheckSubgraphs(AllNodes, [graph(_, Nodes, Edges, Subgraphs)|T]) :-
+staticCheckSubgraphs(_,_,[]).
+staticCheckSubgraphs(Names, AllNodes, [graph(Name, Nodes, Edges, Subgraphs)|T]) :-
     checkNodeScoping(AllNodes, Nodes),
-    checkEdgesForUndeclaredNode(AllNodes, Edges),
-    staticCheckSubgraphs(AllNodes, T),
-    staticCheckSubgraphs(Nodes, Subgraphs).
+    checkIsNameUnique(Name, Names),
+    checkEdgesForUndeclaredNode(Nodes, Edges),
+    staticCheckSubgraphs([Name|Names], AllNodes, T),
+    staticCheckSubgraphs([Name|Names], Nodes, Subgraphs).
 
 
 % checkNodeScoping is true when all nodes are properly scoped.
@@ -92,16 +93,20 @@ staticCheckSubgraphs(AllNodes, [graph(_, Nodes, Edges, Subgraphs)|T]) :-
 % Any node in a subgraph must be present in a parent graph.
 checkNodeScoping(_, []).
 checkNodeScoping(AllowedNodes, [node(Name,_)|T]) :-
-    findNode(Name, AllowedNodes, _),
+    (findNode(Name, AllowedNodes, _) ; domain_error("one of " + AllowedNodes, Name)),
     checkNodeScoping(AllowedNodes, T).
 
 % checkEdgesForUndeclaredNode is true when all edges of the graph
 % refer to nodes that are present in the graph.
 checkEdgesForUndeclaredNode(_, []).
 checkEdgesForUndeclaredNode(AllowedNodes, [dEdge(From,To)|T]) :-
-    findNode(From, AllowedNodes,_),
-    findNode(To, AllowedNodes,_),
+    (findNode(From, AllowedNodes,_) ; domain_error("One of " + AllowedNodes, From)),
+    (findNode(To, AllowedNodes,_) ; domain_error("One of " + AllowedNodes, To)),
     checkEdgesForUndeclaredNode(AllowedNodes, T).
+
+% checkIsNameUnique is true when Name isn't a member of Names.
+checkIsNameUnique(Name, Names) :-
+    (not(member(Name, Names)) ; syntax_error(isUnique(Name))).
 
 /* Miscellaneous Utilities */
 
